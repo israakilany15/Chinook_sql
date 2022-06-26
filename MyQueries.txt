@@ -1,0 +1,55 @@
+MyQueries:
+
+--/* Query 1 - query used for first insight */
+
+SELECT Customer.LastName, Customer.Company, sum(unitprice * Quantity) amt
+from Customer
+ JOIN Invoice
+ on Customer.CustomerId = Invoice.CustomerId
+ JOIN InvoiceLine
+ on Invoice.InvoiceId = InvoiceLine.InvoiceId
+GROUP by 2
+ORDER by amt DESC;
+
+
+/*Query 2 - query used for second insight*/
+
+SELECT Track.TrackId ID, Track.Name song,
+	sum( Invoice.Total) AmountSpent,
+	strftime('%Y', InvoiceDate) year
+FROM Track
+JOIN InvoiceLine
+on InvoiceLine.TrackId = Track.TrackId
+JOIN Invoice
+on Invoice.InvoiceId =	InvoiceLine.InvoiceId
+GROUP by 4
+ORDER by 4 DESC
+LIMIT 10 ;
+
+
+/* Query 3 - query used for third insight*/
+
+SELECT Artist.ArtistId ID, Album.Title as AlbumTitle, 
+	count( Album.AlbumId) songs, Genre.Name as GENRE
+FROM Artist
+ JOIN Album
+ on Album.ArtistId = Artist.ArtistId
+ JOIN Track
+ on Track.AlbumId = Album.AlbumId
+ JOIN Genre
+ on Track.GenreId = Genre.GenreId
+GROUP by 4
+HAVING songs > 30
+ORDER by 3 ; 
+
+
+/* Query 4 - used for query forth insight*/
+
+SELECT Customer.Company, avg(total) AVGCost
+from Customer
+ JOIN Invoice 
+ on Customer.CustomerId = Invoice.CustomerId
+GROUP by  1
+ORDER by  AVGCost DESC ;
+
+
